@@ -34,13 +34,14 @@ RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
 
 COPY package.json package-lock.json ./
 
+RUN npm cache clean --force
 
-RUN npm --global config set user pptruser \
-    && npm cache clean --force
+RUN npm install -g puppeteer
 
-RUN npm i puppeteer -g
 RUN npm install
 
-ENTRYPOINT ["/bin/sh", "-c" , "npm install && npm run start"]
+USER pptruser
+
+ENTRYPOINT ["sh", "-c", "npm install && npm run start"]
 
 EXPOSE 8080
